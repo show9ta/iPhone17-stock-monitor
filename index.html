@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>在庫状況</title>
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 6px;
+    text-align: center;
+  }
+  .in-stock {
+    background-color: orangered;
+    color: white;
+  }
+  .out-stock {
+    background-color: lightgrey;
+    color: black;
+  }
+</style>
+</head>
+<body>
+
+<h1>在庫状況</h1>
+<table id="stock-table">
+  <thead>
+    <tr>
+      <th>店舗</th>
+      <th>商品</th>
+      <th>在庫</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- JSでここに行を追加 -->
+  </tbody>
+</table>
+
+<script>
+async function loadStock() {
+  const res = await fetch('stock.json?' + new Date().getTime()); // キャッシュ回避
+  const data = await res.json();
+
+  const tbody = document.querySelector('#stock-table tbody');
+  tbody.innerHTML = ''; // 一旦クリア
+
+  // 店舗ごとにループ（JSONの順序通り）
+  for (const store of Object.keys(data)) {
+    const products = data[store];
+    for (const product of Object.keys(products)) {
+      const value = products[product];
+      const tr = document.createElement('tr');
+
+      const tdStore = document.createElement('td');
+      tdStore.textContent = store;
+      tr.appendChild(tdStore);
+
+      const tdProduct = document.createElement('td');
+      tdProduct.textContent = product;
+      tr.appendChild(tdProduct);
+
+      const tdStock = document.createElement('td');
+      tdStock.textContent = value ? 'あり' : 'なし';
+      tdStock.className = value ? 'in-stock' : 'out-stock';
+      tr.appendChild(tdStock);
+
+      tbody.appendChild(tr);
+    }
+  }
+}
+
+// 初回表示
+loadStock();
+
+// 5秒ごとに更新
+setInterval(loadStock, 5000);
+</script>
+
+</body>
+</html>
