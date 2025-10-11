@@ -9,44 +9,72 @@
     font-size: 18px;
     margin: 20px;
   }
+
+  h1 {
+    text-align: center;
+  }
+
+  /* テーブルを横スクロール可能に */
+  .table-container {
+    overflow-x: auto;
+    margin-top: 20px;
+  }
+
   table {
     border-collapse: collapse;
     width: 100%;
-    font-size: 16px;
+    min-width: 600px; /* 最小幅を設定 */
   }
+
   th, td {
     border: 1px solid #ccc;
     padding: 8px;
     text-align: center;
+    white-space: nowrap; /* テキストの改行を防止 */
   }
+
   th {
     background-color: #f0f0f0;
   }
+
   .in-stock {
     background-color: orangered;
     color: white;
     font-weight: bold;
   }
+
   .out-stock {
     background-color: lightgrey;
     color: black;
+  }
+
+  @media (max-width: 600px) {
+    body {
+      font-size: 16px;
+    }
+    th, td {
+      padding: 6px;
+    }
   }
 </style>
 </head>
 <body>
 
 <h1>在庫状況</h1>
-<table id="stock-table">
-  <thead>
-    <tr>
-      <th>店舗</th>
-      <!-- JSで商品名のヘッダーを追加 -->
-    </tr>
-  </thead>
-  <tbody>
-    <!-- JSでここに行を追加 -->
-  </tbody>
-</table>
+
+<div class="table-container">
+  <table id="stock-table">
+    <thead>
+      <tr>
+        <th>店舗</th>
+        <!-- JSで商品名のヘッダーを追加 -->
+      </tr>
+    </thead>
+    <tbody>
+      <!-- JSでここに行を追加 -->
+    </tbody>
+  </table>
+</div>
 
 <script>
 async function loadStock() {
@@ -63,7 +91,7 @@ async function loadStock() {
   const firstStore = Object.keys(data)[0];
   const products = Object.keys(data[firstStore]);
 
-  // 既存のヘッダーをクリアしてから追加
+  // ヘッダーをクリアして再作成
   thead.innerHTML = '<th>店舗</th>';
   products.forEach(product => {
     const th = document.createElement('th');
@@ -71,8 +99,10 @@ async function loadStock() {
     thead.appendChild(th);
   });
 
-  // 店舗ごとに行を作成
-  Object.keys(data).forEach(store => {
+  // JSON の順序通りに店舗を表示
+  const stores = Object.keys(data);
+
+  stores.forEach(store => {
     const tr = document.createElement('tr');
 
     const tdStore = document.createElement('td');
