@@ -21,24 +21,13 @@
 
   th, td {
     border: 1px solid #ccc;
-    padding: 6px;
-    text-align: center;
-    word-break: break-word; /* 商品名を折り返す */
+    padding: 8px;
+    text-align: left;
+    word-break: break-word; /* 長い商品名を折り返す */
   }
 
   th {
     background-color: #f0f0f0;
-  }
-
-  /* 店舗1:商品名2:在庫1の比率 */
-  th:nth-child(1), td:nth-child(1) {
-    width: 20%;
-  }
-  th:nth-child(2), td:nth-child(2) {
-    width: 40%;
-  }
-  th:nth-child(3), td:nth-child(3) {
-    width: 20%;
   }
 
   .in-stock {
@@ -55,9 +44,6 @@
   @media (max-width: 600px) {
     body {
       font-size: 16px;
-    }
-    th, td {
-      padding: 4px;
     }
   }
 </style>
@@ -86,7 +72,6 @@ async function loadStock() {
   const tbody = document.querySelector('#stock-table tbody');
   tbody.innerHTML = ''; // 一旦クリア
 
-  // 店舗ごとにループ（JSONの順序通り）
   for (const store of Object.keys(data)) {
     const products = data[store];
     for (const product of Object.keys(products)) {
