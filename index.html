@@ -14,27 +14,31 @@
     text-align: center;
   }
 
-  /* テーブルを横スクロール可能に */
-  .table-container {
-    overflow-x: auto;
-    margin-top: 20px;
-  }
-
   table {
     border-collapse: collapse;
     width: 100%;
-    min-width: 600px; /* 最小幅を設定 */
   }
 
   th, td {
     border: 1px solid #ccc;
-    padding: 8px;
+    padding: 6px;
     text-align: center;
-    white-space: nowrap; /* テキストの改行を防止 */
+    word-break: break-word; /* 商品名を折り返す */
   }
 
   th {
     background-color: #f0f0f0;
+  }
+
+  /* 店舗1:商品名2:在庫1の比率 */
+  th:nth-child(1), td:nth-child(1) {
+    width: 20%;
+  }
+  th:nth-child(2), td:nth-child(2) {
+    width: 40%;
+  }
+  th:nth-child(3), td:nth-child(3) {
+    width: 20%;
   }
 
   .in-stock {
@@ -53,7 +57,7 @@
       font-size: 16px;
     }
     th, td {
-      padding: 6px;
+      padding: 4px;
     }
   }
 </style>
@@ -61,64 +65,50 @@
 <body>
 
 <h1>在庫状況</h1>
-
-<div class="table-container">
-  <table id="stock-table">
-    <thead>
-      <tr>
-        <th>店舗</th>
-        <!-- JSで商品名のヘッダーを追加 -->
-      </tr>
-    </thead>
-    <tbody>
-      <!-- JSでここに行を追加 -->
-    </tbody>
-  </table>
-</div>
+<table id="stock-table">
+  <thead>
+    <tr>
+      <th>店舗</th>
+      <th>商品</th>
+      <th>在庫</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- JSでここに行を追加 -->
+  </tbody>
+</table>
 
 <script>
 async function loadStock() {
   const res = await fetch('stock.json?' + new Date().getTime()); // キャッシュ回避
   const data = await res.json();
 
-  const table = document.querySelector('#stock-table');
-  const thead = table.querySelector('thead tr');
-  const tbody = table.querySelector('tbody');
-
+  const tbody = document.querySelector('#stock-table tbody');
   tbody.innerHTML = ''; // 一旦クリア
 
-  // 商品名のヘッダーを作成（最初の店舗から取得）
-  const firstStore = Object.keys(data)[0];
-  const products = Object.keys(data[firstStore]);
+  // 店舗ごとにループ（JSONの順序通り）
+  for (const store of Object.keys(data)) {
+    const products = data[store];
+    for (const product of Object.keys(products)) {
+      const value = products[product];
+      const tr = document.createElement('tr');
 
-  // ヘッダーをクリアして再作成
-  thead.innerHTML = '<th>店舗</th>';
-  products.forEach(product => {
-    const th = document.createElement('th');
-    th.textContent = product;
-    thead.appendChild(th);
-  });
+      const tdStore = document.createElement('td');
+      tdStore.textContent = store;
+      tr.appendChild(tdStore);
 
-  // JSON の順序通りに店舗を表示
-  const stores = Object.keys(data);
+      const tdProduct = document.createElement('td');
+      tdProduct.textContent = product;
+      tr.appendChild(tdProduct);
 
-  stores.forEach(store => {
-    const tr = document.createElement('tr');
+      const tdStock = document.createElement('td');
+      tdStock.textContent = value ? 'あり' : 'なし';
+      tdStock.className = value ? 'in-stock' : 'out-stock';
+      tr.appendChild(tdStock);
 
-    const tdStore = document.createElement('td');
-    tdStore.textContent = store;
-    tr.appendChild(tdStore);
-
-    products.forEach(product => {
-      const value = data[store][product];
-      const td = document.createElement('td');
-      td.textContent = value ? 'あり' : 'なし';
-      td.className = value ? 'in-stock' : 'out-stock';
-      tr.appendChild(td);
-    });
-
-    tbody.appendChild(tr);
-  });
+      tbody.appendChild(tr);
+    }
+  }
 }
 
 // 初回表示
