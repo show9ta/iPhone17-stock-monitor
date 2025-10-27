@@ -5,17 +5,62 @@
 <title>在庫状況</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  body { font-family: sans-serif; font-size: 26px; margin: 20px; }
-  h1 { text-align: center; }
-  table { border-collapse: collapse; width: 100%; }
-  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; word-break: break-word; }
-  th { background-color: #f0f0f0; }
-  .in-stock { background-color: orangered; color: white; font-weight: bold; }
-  .out-stock { background-color: lightgrey; color: black; }
+  body {
+    font-family: sans-serif;
+    font-size: 26px;
+    margin: 20px;
+  }
+
+  h1 {
+    text-align: center;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+    word-break: break-word;
+  }
+
+  th {
+    background-color: #f0f0f0;
+  }
+
+  .in-stock {
+    background-color: orangered;
+    color: white;
+    font-weight: bold;
+  }
+
+  .out-stock {
+    background-color: lightgrey;
+    color: black;
+  }
+
+  /* 列幅比率：店舗2、商品3、在庫1 */
+  #stock-table th:nth-child(1),
+  #stock-table td:nth-child(1) { width: 25%; }
+  #stock-table th:nth-child(2),
+  #stock-table td:nth-child(2) { width: 60%; }
+  #stock-table th:nth-child(3),
+  #stock-table td:nth-child(3) { width: 15%; }
+
+  @media (max-width: 600px) {
+    body {
+      font-size: 18px; /* スマホ用に少し小さく */
+    }
+  }
 </style>
 </head>
 <body>
+
 <h1>在庫状況</h1>
+<h2 id="last-update">最終更新：--:--:--</h2>
 <table id="stock-table">
   <thead>
     <tr>
@@ -32,11 +77,14 @@ async function loadStock() {
   const res = await fetch('stock.json?' + new Date().getTime()); // キャッシュ回避
   const data = await res.json();
 
+  // timestamp を表示
+  document.getElementById('last-update').textContent = `最終更新：${data.timestamp}`;
+
   const tbody = document.querySelector('#stock-table tbody');
   tbody.innerHTML = '';
 
-  for (const store of Object.keys(data)) {
-    const products = data[store];
+  for (const store of Object.keys(data.stores)) {
+    const products = data.stores[store];
     for (const product of Object.keys(products)) {
       const value = products[product];
       const tr = document.createElement('tr');
