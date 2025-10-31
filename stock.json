@@ -1,9 +1,9 @@
 {
-  "timestamp": "10:30:15",
+  "timestamp": "10:32:37",
   "stores": {
     "名古屋栄": {
       "iPhone 17 Max 256GB オレンジ🍊": 1,
-      "iPhone 17 Max 256GB シルバー🥈": 1,
+      "iPhone 17 Max 256GB シルバー🥈": 0,
       "iPhone 17 Max 256GB ブルー🫐": 0
     },
     "梅田": {
@@ -13,7 +13,7 @@
     },
     "心斎橋": {
       "iPhone 17 Max 256GB オレンジ🍊": 1,
-      "iPhone 17 Max 256GB シルバー🥈": 0,
+      "iPhone 17 Max 256GB シルバー🥈": 1,
       "iPhone 17 Max 256GB ブルー🫐": 0
     },
     "京都": {
@@ -22,8 +22,8 @@
       "iPhone 17 Max 256GB ブルー🫐": 0
     },
     "新宿": {
-      "iPhone 17 Max 256GB オレンジ🍊": 1,
-      "iPhone 17 Max 256GB シルバー🥈": 1,
+      "iPhone 17 Max 256GB オレンジ🍊": 0,
+      "iPhone 17 Max 256GB シルバー🥈": 0,
       "iPhone 17 Max 256GB ブルー🫐": 0
     },
     "丸の内": {
@@ -37,7 +37,7 @@
       "iPhone 17 Max 256GB ブルー🫐": 0
     },
     "渋谷": {
-      "iPhone 17 Max 256GB オレンジ🍊": 0,
+      "iPhone 17 Max 256GB オレンジ🍊": 1,
       "iPhone 17 Max 256GB シルバー🥈": 0,
       "iPhone 17 Max 256GB ブルー🫐": 0
     },
